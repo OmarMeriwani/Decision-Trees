@@ -71,7 +71,7 @@ namespace Decision_trees
             string BestAttr = CalculateInformationGain(examples, "all");
 
         }
-        public static string CalculateInformationGain (List<Example> examples, string attributeLists)
+        public static string CalculateInformationGain (List<Example> examples, string attributeLists, Attribute CheckedAttribute)
         {
             List<Attribute> attributes = new List<Attribute>();
             if (attributeLists == "" || attributeLists == "*" || attributeLists == "all")
@@ -97,8 +97,28 @@ namespace Decision_trees
                     attributes = Program.ProgramAttributes;
                 }
             }
-            //
+            //Check Each Example: Get the Attribute: Get Attr-Classes VS the needed one : Check if Selected : Increase count in attributes
+            foreach (Attribute A in attributes)
+            {
+                foreach (Example E in examples)
+                {
+                    
+                    foreach (AttributeClass AC in E.attributes.Where(a => a.AttrName == A.AttrName ).SingleOrDefault().classes)
+                    {
+                        //Here we have to make a class that has pairs of Attribute classes
+                        //For each time we find class A (the one that we are checking) and the base attribute class (that belongs to the one that we want to count) we should increase the count 1
+                    }
+                }
+            }
+            //After finishing the calculations we should have counts of each attribute enum val (classes) against the one that we need
+            //We do the caluclations of the probability * log2 (probability) and find the highest and return the attribute name and value of it.
             return "";
+        }
+        class AttributeCounts
+        {
+            public AttributeClass Attribute_Base { get; set; }
+            public AttributeClass Attribute_Against { get; set; }
+            public int baseCount { get; set; }
         }
         public static List<Attribute> best_attribute = new List<Attribute>();
         static Node Create_decision_tree (List<Example> examples, List<Attribute> attributes)
@@ -151,6 +171,7 @@ namespace Decision_trees
         public int AttrID { get; set; }
         public string AttrName { get; set; }
         public double informationGain { get; set; }
+        
         public List<AttributeClass> classes { get; set; }
     }
     class AttributeClass
